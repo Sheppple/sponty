@@ -7,8 +7,8 @@ import os
 
 load_dotenv()
 
-CLIENT_ID = os.environ.get('SPOTIPY_CLIENT_ID')
-CLIENT_SECRET = os.environ.get('SPOTIPY_CLIENT_SECRET')
+CLIENT_ID = os.environ.get('CLIENT_ID')
+CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 REDIRECT_URI = 'http://127.0.0.1:8000/callback'
 
 sp = spotipy.Spotify(
@@ -39,7 +39,3 @@ for i, name in enumerate(track_name, start = 1):
 st.subheader('Top Artists')
 for i, name in enumerate(artist_name, start = 1):
   st.write(i, name)
-
-
-
-
