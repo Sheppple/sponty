@@ -28,17 +28,14 @@ html, body, [class*="css"] {
     display: inline-block;
     padding: 10px 20px;
     background-color: rgba(30, 215, 96, 1);
-    font-family: 'Oswald', sans-serif;
     border-radius: 3em;
+}
+
+.spotify_login a{
+    font-family: 'Oswald';
     color: rgb(0, 0, 0);
     text-decoration: none;
 }
-
-.spotify_button:hover {
-    background-color: rgb(13, 126, 53);
-}
-
-
 
 /* Main Title */
 .title h1{
