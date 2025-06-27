@@ -10,40 +10,14 @@ CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
 REDIRECT_URI = 'https://sponty.streamlit.app/callback'
 
-#sp = spotipy.Spotify(
-#  auth_manager=SpotifyOAuth(
-#    client_id = CLIENT_ID,
-#    client_secret = CLIENT_SECRET,
-#    redirect_uri = REDIRECT_URI,
-#    scope = 'user-top-read'
-#  )
-#)
-
-# Spotify OAuth Setup
-sp_oauth = SpotifyOAuth(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    redirect_uri=REDIRECT_URI,
-    scope='user-top-read',
-    open_browser=False,
-    cache_path=".cache"
+sp = spotipy.Spotify(
+  auth_manager=SpotifyOAuth(
+    client_id = CLIENT_ID,
+    client_secret = CLIENT_SECRET,
+    redirect_uri = REDIRECT_URI,
+    scope = 'user-top-read'
+  )
 )
-
-# Try to get token
-token_info = sp_oauth.get_cached_token()
-
-if not token_info:
-    auth_url = sp_oauth.get_authorize_url()
-    st.markdown(f"[Click here to log in with Spotify]({auth_url})")
-
-    redirect_response = st.text_input("After logging in, paste the full URL you were redirected to here:")
-
-    if redirect_response:
-        code = sp_oauth.parse_response_code(redirect_response)
-        token_info = sp_oauth.get_access_token(code)
-
-if token_info:
-    sp = spotipy.Spotify(auth=token_info['access_token'])
 
 # Loading the CSS
 with open('assets/style.css') as f:
