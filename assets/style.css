@@ -36,7 +36,10 @@ html, body, [class*="css"] {
     transition: background-color 0.3s ease;
 }
 
+/* Reset Login */
+.st-key-reset_login {
 
+}
 
 /* Main Title */
 .title h1{

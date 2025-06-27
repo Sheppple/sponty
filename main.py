@@ -20,7 +20,7 @@ with open('assets/style.css') as f:
 st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 
 # -------------------------------
-# Custom CacheHandler for session
+# Custom CacheHandler (Session-based)
 # -------------------------------
 class StreamlitSessionCacheHandler:
     def __init__(self, session_key="token_info"):
@@ -33,18 +33,21 @@ class StreamlitSessionCacheHandler:
         st.session_state[self.session_key] = token_info
 
 # -------------------------------
-# SpotifyOAuth Setup
+# Wrapped OAuth Instance Per Session
 # -------------------------------
-auth_manager = SpotifyOAuth(
-    client_id=CLIENT_ID,
-    client_secret=CLIENT_SECRET,
-    redirect_uri=REDIRECT_URI,
-    scope=SCOPE,
-    show_dialog=True,
-    cache_handler=StreamlitSessionCacheHandler()
-)
+def get_auth_manager():
+    return SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI,
+        scope=SCOPE,
+        show_dialog=True,
+        cache_handler=StreamlitSessionCacheHandler()  # ✅ No file-based cache!
+    )
 
-# Initialize session state
+# -------------------------------
+# Initialize Session State
+# -------------------------------
 if "token_info" not in st.session_state:
     st.session_state.token_info = None
 if "auth_pending" not in st.session_state:
@@ -52,12 +55,12 @@ if "auth_pending" not in st.session_state:
 if "code_used" not in st.session_state:
     st.session_state.code_used = False
 
-# Get query parameters
+# -------------------------------
+# Handle Query Params (Spotify Redirect)
+# -------------------------------
 query_params = st.query_params
+auth_manager = get_auth_manager()
 
-# -------------------------------
-# Authentication Flow
-# -------------------------------
 if not st.session_state.token_info:
     if "code" in query_params and not st.session_state.code_used:
         st.session_state.auth_pending = True
@@ -73,49 +76,39 @@ if not st.session_state.token_info:
                 st.rerun()
             else:
                 st.error("Failed to retrieve access token. Please log in again.")
-                st.session_state.auth_pending = False
                 st.stop()
-
         except Exception as e:
             st.error(f"OAuth Error: {e}")
-            st.session_state.auth_pending = False
             st.stop()
-
     else:
         # Not logged in yet
         st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
         auth_url = auth_manager.get_authorize_url()
-        st.markdown(f"""<div class="spotify_button"><a href="{auth_url}" class="spotify_login">login with Spotify</a></div>""", unsafe_allow_html=True)
+        st.markdown(
+            f"""<div class="spotify_button"><a href="{auth_url}" class="spotify_login">login with Spotify</a></div>""",
+            unsafe_allow_html=True
+        )
 
         if st.button("Reset Login"):
-            for key in ["token_info", "auth_pending", "code_used"]:
-                st.session_state.pop(key, None)
+            st.session_state.clear()
             st.query_params.clear()
             st.rerun()
 
         st.stop()
 
-# Show loading
 if st.session_state.auth_pending:
     st.info("Finishing authentication...")
     st.stop()
 
-# Ensure token exists
-if not st.session_state.token_info:
-    st.error("No token found. Please login again.")
-    st.stop()
-
 # -------------------------------
-# Main App Logic
+# Spotify Session with Per-User Token
 # -------------------------------
 token_info = st.session_state.token_info
 sp = spotipy.Spotify(auth=token_info['access_token'])
 
-
-# Main App
-token_info = st.session_state.token_info
-sp = spotipy.Spotify(auth=token_info['access_token'])
-
+# -------------------------------
+# MAIN APP CONTENT
+# -------------------------------
 
 # Title
 st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
