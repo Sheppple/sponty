@@ -21,7 +21,7 @@ html, body, [class*="css"] {
 .spotify_button {
     display: flex;
     justify-content: center;
-    margin: 2em 0; /* Optional spacing */
+    margin: 2em 0;
 }
 
 .spotify_login {
@@ -29,6 +29,7 @@ html, body, [class*="css"] {
     padding: 10px 20px;
     background-color: rgba(30, 215, 96, 1);
     border-radius: 3em;
+    text-decoration: none;
 }
 
 .spotify_login a{
