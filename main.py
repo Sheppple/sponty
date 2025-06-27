@@ -21,7 +21,7 @@ with open('assets/style.css') as f:
 st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 
 # -------------------------------
-# ✅ Custom Session-based Cache Handler
+# ✅ Custom Session-Based Cache Handler
 # -------------------------------
 class StreamlitSessionCacheHandler(CacheHandler):
     def __init__(self, session_key="token_info"):
@@ -34,7 +34,7 @@ class StreamlitSessionCacheHandler(CacheHandler):
         st.session_state[self.session_key] = token_info
 
 # -------------------------------
-# Wrapped OAuth Instance Per Session
+# Get Spotify OAuth Auth Manager
 # -------------------------------
 def get_auth_manager():
     return SpotifyOAuth(
@@ -43,7 +43,7 @@ def get_auth_manager():
         redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         show_dialog=True,
-        cache_handler=StreamlitSessionCacheHandler()  # ✅ Per-user session
+        cache_handler=StreamlitSessionCacheHandler()
     )
 
 # -------------------------------
@@ -56,12 +56,12 @@ if "auth_pending" not in st.session_state:
 if "code_used" not in st.session_state:
     st.session_state.code_used = False
 
-# -------------------------------
-# Handle Spotify OAuth Callback
-# -------------------------------
 query_params = st.query_params
 auth_manager = get_auth_manager()
 
+# -------------------------------
+# OAuth Flow Handling
+# -------------------------------
 if not st.session_state.token_info:
     if "code" in query_params and not st.session_state.code_used:
         st.session_state.auth_pending = True
@@ -102,9 +102,15 @@ if st.session_state.auth_pending:
     st.stop()
 
 # -------------------------------
-# Spotify Session with Per-User Token
+# Refresh Token If Expired
 # -------------------------------
 token_info = st.session_state.token_info
+
+if auth_manager.is_token_expired(token_info):
+    token_info = auth_manager.refresh_access_token(token_info['refresh_token'])
+    st.session_state.token_info = token_info
+
+# Create Spotify session
 sp = spotipy.Spotify(auth=token_info['access_token'])
 
 # -------------------------------
