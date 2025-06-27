@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Gasoek+One&family=Oswald:wght@200..700&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Oswald', sans-serif;
+    color: #a7a7a7;
+}
+
+.stApp {
+    margin: auto;
+    overflow: auto;
+    font-family: 'Oswald', sans-serif;
+    background-color: black;
+    background-image:
+      linear-gradient(to right, rgba(24, 23, 23, 1) 5px, transparent 1px),
+      linear-gradient(to bottom, rgba(24, 23, 23, 1) 5px, transparent 1px);
+    background-size: 60px 60px;
+    background-repeat: repeat;
+}
+
+.title h1{
+  color: rgba(30, 215, 96, 1);
+  font-size: 5em;
+  font-weight: bolder;
+  text-align: center;
+  font-family: 'Oswald';
+}
+
+/* Selector Container */
+.st-key-selector {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Selector List*/
+div[data-baseweb="select"] > div {
+  background-color: rgba(76, 2, 232, 1);
+  color: white;
+  font-family: 'Oswald';
+  font-size: 1.5em;
+  border: none;
+  border-radius: 30px;
+  width: 200px;
+  height: 50px;
+}
+
+/* Container */
+.st-key-container{
+  padding: 2em;
+  background-color: rgba(60, 255, 208, 1);
+  border-radius: 3em;
+}
+
+/* Top Songs Container */
+.st-key-top_songs {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  background-color: rgba(214, 243, 31, 1);
+  border-radius: 1em;
+  color: #000000;
+  font-size: 2em;
+  line-height: 1;
+
+}
+
+/* Top Songs Subheader */
+.st-key-top_songs h3{
+  color: #000000;
+  font-size: 2em;
+}
+
+/* Top Songs Circle Rank */
+.song-rank-circle {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  background-color: #000000;
+  color: rgba(214, 243, 31, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Gasoek One';
+  font-size: 1em;
+  flex-shrink: 0;
+  margin-bottom: 0.5em;
+}
+
+/* Top Artists Container*/
+.st-key-top_artists {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  background-color: rgba(255, 60, 155, 1);
+  border-radius: 1em;
+  color: #000000;
+  font-size: 2em;
+  line-height: 1;
+
+}
+
+/* Top Artists Subheader */
+.st-key-top_artists h3{
+  color: #000000;
+  font-size: 2em;
+}
+
+/* Top Artists Circle Rank */
+.artist-rank-circle {
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  background-color: #000000;
+  color: rgba(255, 60, 155, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Gasoek One';
+  font-size: 1em;
+  flex-shrink: 0;
+  margin-bottom: 0.5em;
+}
+
+/* Github Link */
+.link p{
+  text-align: center;
+  font-family: 'Oswald';
+  font-size: 1.5em;
+}
+
+.link a{
+  color: rgba(30, 215, 96, 1);
+  text-decoration: none;
+}
+
+.link a:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}
