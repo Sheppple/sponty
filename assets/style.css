@@ -17,24 +17,25 @@ html, body, [class*="css"] {
     background-repeat: repeat;
 }
 
-/* Spotify Login */
+/* Wrapper for centering */
 .spotify_button {
     display: flex;
     justify-content: center;
     margin: 2em 0;
 }
 
-.spotify_login {
+/* The anchor tag styled as a button */
+.spotify_button .spotify_login {
     display: inline-block;
     padding: 10px 20px;
     background-color: rgba(30, 215, 96, 1);
     border-radius: 3em;
-    text-decoration: none;
+    text-decoration: none !important; /* <-- force-remove underline */
     font-family: 'Oswald';
-    color: rgb(0, 0, 0);
-    font-weight: bold;
+    color: black !important;          /* <-- force text color */
     transition: background-color 0.3s ease;
 }
+
 
 
 /* Main Title */
