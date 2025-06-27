@@ -43,16 +43,18 @@ def get_auth_manager():
         redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         show_dialog=True,
-        cache_handler=StreamlitSessionCacheHandler()
+        cache_handler=StreamlitSessionCacheHandler() # Use the custom cache handler
     )
 
 # -------------------------------
 # Initialize Session State
 # -------------------------------
+# Ensure all necessary session state variables are initialized
 if "token_info" not in st.session_state:
     st.session_state.token_info = None
 if "auth_pending" not in st.session_state:
     st.session_state.auth_pending = False
+# The `code_used` flag is crucial to prevent reprocessing the same code
 if "code_used" not in st.session_state:
     st.session_state.code_used = False
 
@@ -62,27 +64,48 @@ auth_manager = get_auth_manager()
 # -------------------------------
 # OAuth Flow Handling
 # -------------------------------
+# If no token_info, attempt to authenticate
 if not st.session_state.token_info:
-    if "code" in query_params and not st.session_state.code_used:
-        st.session_state.auth_pending = True
-        st.session_state.code_used = True
-        code = query_params["code"]
+    # Check if a 'code' parameter exists in the URL after Spotify redirect
+    if "code" in query_params:
+        # If code is present and hasn't been used yet in this session
+        if not st.session_state.code_used:
+            st.session_state.auth_pending = True
+            st.session_state.code_used = True # Mark code as used for this session
+            code = query_params["code"]
 
-        try:
-            token_info = auth_manager.get_access_token(code, as_dict=True)
-            if token_info:
-                st.session_state.token_info = token_info
-                st.session_state.auth_pending = False
-                st.query_params.clear()
-                st.rerun()
-            else:
-                st.error("Failed to retrieve access token. Please log in again.")
-                st.stop()
-        except Exception as e:
-            st.error(f"OAuth Error: {e}")
-            st.stop()
+            try:
+                # Exchange the code for an access token
+                token_info = auth_manager.get_access_token(code, as_dict=True)
+                if token_info:
+                    st.session_state.token_info = token_info
+                    st.session_state.auth_pending = False
+                    # Clear query params to remove the 'code' from the URL
+                    # This prevents the app from trying to re-process the code on subsequent runs
+                    st.query_params.clear()
+                    st.rerun() # Rerun to remove the code from the URL and display main content
+                else:
+                    st.error("Failed to retrieve access token. Please log in again.")
+                    # Optionally clear session state here if token retrieval truly failed
+                    st.session_state.clear()
+                    st.query_params.clear() # Ensure clean slate
+                    st.rerun() # Rerun to show login button
+            except Exception as e:
+                st.error(f"OAuth Error: {e}. Please try logging in again.")
+                st.session_state.clear() # Clear session state on error
+                st.query_params.clear() # Ensure clean slate
+                st.rerun() # Rerun to show login button
+        else:
+            # If code is present but already used (e.g., during a rerun from code_used=True)
+            # We don't need to do anything here, just let the app continue if token_info is set
+            # or show the login button if not (which should be handled by the next `if` block)
+            pass
+    elif st.session_state.auth_pending:
+        # This state is for when the code was just processed, and we are waiting for rerun
+        st.info("Finishing authentication...")
+        st.stop() # Stop further execution until rerun
     else:
-        # Not logged in
+        # Not logged in and no code in URL - show login button
         st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
         auth_url = auth_manager.get_authorize_url()
         st.markdown(
@@ -95,8 +118,9 @@ if not st.session_state.token_info:
             st.query_params.clear()
             st.rerun()
 
-        st.stop()
+        st.stop() # Stop further execution if not authenticated
 
+# If authentication is still pending (e.g., after the initial redirect and before `st.rerun()` finishes)
 if st.session_state.auth_pending:
     st.info("Finishing authentication...")
     st.stop()
@@ -104,14 +128,41 @@ if st.session_state.auth_pending:
 # -------------------------------
 # Refresh Token If Expired
 # -------------------------------
-token_info = st.session_state.token_info
+# Ensure token_info exists before trying to use or refresh it
+if st.session_state.token_info:
+    token_info = st.session_state.token_info
+    if auth_manager.is_token_expired(token_info):
+        try:
+            token_info = auth_manager.refresh_access_token(token_info['refresh_token'])
+            if token_info:
+                st.session_state.token_info = token_info
+            else:
+                st.error("Failed to refresh token. Please log in again.")
+                st.session_state.clear()
+                st.rerun()
+        except Exception as e:
+            st.error(f"Error refreshing token: {e}. Please log in again.")
+            st.session_state.clear()
+            st.rerun()
+else:
+    # If we somehow reached here without token_info, force a re-login
+    st.session_state.clear()
+    st.rerun()
 
-if auth_manager.is_token_expired(token_info):
-    token_info = auth_manager.refresh_access_token(token_info['refresh_token'])
-    st.session_state.token_info = token_info
+# Create Spotify session only if token_info is valid
+try:
+    if st.session_state.token_info and 'access_token' in st.session_state.token_info:
+        sp = spotipy.Spotify(auth=st.session_state.token_info['access_token'])
+    else:
+        # This case should ideally not be hit if the above logic works
+        st.error("Authentication required. Please log in.")
+        st.session_state.clear()
+        st.rerun()
+except Exception as e:
+    st.error(f"Failed to initialize Spotify client: {e}. Please log in again.")
+    st.session_state.clear()
+    st.rerun()
 
-# Create Spotify session
-sp = spotipy.Spotify(auth=token_info['access_token'])
 
 # -------------------------------
 # MAIN APP CONTENT
