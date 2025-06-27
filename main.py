@@ -3,21 +3,48 @@ from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 from dotenv import load_dotenv
 import os
+from urllib.parse import urlparse, parse_qs
 
 load_dotenv()
 
 CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-REDIRECT_URI = 'https://sponty.streamlit.app/callback'
+REDIRECT_URI = 'https://sponty.streamlit.app'
 
-sp = spotipy.Spotify(
-  auth_manager=SpotifyOAuth(
-    client_id = CLIENT_ID,
-    client_secret = CLIENT_SECRET,
-    redirect_uri = REDIRECT_URI,
-    scope = 'user-top-read'
-  )
-)
+#sp = spotipy.Spotify(
+#  auth_manager=SpotifyOAuth(
+#    client_id = CLIENT_ID,
+#    client_secret = CLIENT_SECRET,
+#    redirect_uri = REDIRECT_URI,
+#    scope = 'user-top-read'
+#  )
+#)
+
+if "token_info" not in st.session_state:
+    auth_manager = SpotifyOAuth(
+        client_id=CLIENT_ID,
+        client_secret=CLIENT_SECRET,
+        redirect_uri=REDIRECT_URI,
+        scope='user-top-read',
+        show_dialog=True,
+        cache_path=".cache"  # won't persist across sessions on Streamlit Cloud
+    )
+
+    auth_url = auth_manager.get_authorize_url()
+    st.markdown(f"[**Click here to log in with Spotify**]({auth_url})")
+
+    # Parse code from URL after redirect
+    query_params = st.query_params
+    if "code" in query_params:
+        code = query_params["code"]
+        token_info = auth_manager.get_access_token(code, as_dict=True)
+        st.session_state.token_info = token_info
+        st.rerun()
+
+# Once logged in
+if "token_info" in st.session_state:
+    token_info = st.session_state.token_info
+    sp = spotipy.Spotify(auth=token_info['access_token'])
 
 # Loading the CSS
 with open('assets/style.css') as f:
