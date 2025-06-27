@@ -19,6 +19,14 @@ REDIRECT_URI = 'https://sponty.streamlit.app'
 #    scope = 'user-top-read'
 #  )
 #)
+
+# Loading the CSS
+with open('assets/style.css') as f:
+    st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+
+# Page Configuration
+st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
+
 # Step 1: Check if the user is logged in
 if "token_info" not in st.session_state:
     auth_manager = SpotifyOAuth(
@@ -50,6 +58,7 @@ else:
     # Step 2: Main App (User is Authenticated)
     token_info = st.session_state.token_info
     sp = spotipy.Spotify(auth=token_info["access_token"])
+
 
 # Title
 st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
