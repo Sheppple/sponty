@@ -1,24 +1,9 @@
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 from dotenv import load_dotenv
 import os
-from urllib.parse import urlparse, parse_qs
 
 load_dotenv()
-
-CLIENT_ID = os.environ.get('CLIENT_ID')
-CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-REDIRECT_URI = 'https://sponty.streamlit.app'
-
-#sp = spotipy.Spotify(
-#  auth_manager=SpotifyOAuth(
-#    client_id = CLIENT_ID,
-#    client_secret = CLIENT_SECRET,
-#    redirect_uri = REDIRECT_URI,
-#    scope = 'user-top-read'
-#  )
-#)
 
 # Loading the CSS
 with open('assets/style.css') as f:
@@ -27,37 +12,13 @@ with open('assets/style.css') as f:
 # Page Configuration
 st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 
-# Step 1: Check if the user is logged in
+# Check if authenticated
 if "token_info" not in st.session_state:
-    auth_manager = SpotifyOAuth(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        redirect_uri=REDIRECT_URI,
-        scope='user-top-read',
-        show_dialog=True,
-        cache_handler=None,
-    )
+    st.warning("Please log in to Spotify first.")
+    st.switch_page("auth.py")
 
-    auth_url = auth_manager.get_authorize_url()
-
-    st.title("🎧 Connect your Spotify")
-    st.markdown("Click below to connect your Spotify account.")
-    st.markdown(f"[**Login with Spotify**]({auth_url})")
-
-    query_params = st.query_params
-    if "code" in query_params:
-        code = query_params["code"]
-        try:
-            token_info = auth_manager.get_access_token(code, as_dict=True)
-            st.session_state.token_info = token_info
-            st.rerun()  # Rerun to load the main app
-        except Exception as e:
-            st.error(f"OAuth error: {e}")
-
-else:
-    # Step 2: Main App (User is Authenticated)
-    token_info = st.session_state.token_info
-    sp = spotipy.Spotify(auth=token_info["access_token"])
+# Load Spotify client
+sp = spotipy.Spotify(auth=st.session_state.token_info["access_token"])
 
 
 # Title
