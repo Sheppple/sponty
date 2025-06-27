@@ -70,7 +70,7 @@ if not st.session_state.token_info:
         st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
         auth_url = auth_manager.get_authorize_url()
         #st.markdown(f"[**Login with Spotify**]({auth_url})")
-        st.markdown(f"""<a href="{auth_url}" target="_self" class="spotify-login">Login with Spotify</a>""", unsafe_allow_html=True)
+        st.markdown(f"""<div class="spotify_button"><a href="{auth_url}" class="spotify_login">Login with Spotify</a></div>""",unsafe_allow_html=True)
 
         if st.button("Reset Login"):
             for key in ["token_info", "auth_pending", "code_used"]:

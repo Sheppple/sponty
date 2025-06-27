@@ -18,18 +18,23 @@ html, body, [class*="css"] {
 }
 
 /* Spotify Login */
-.spotify-login {
+.spotify_button {
+    display: flex;
+    justify-content: center;
+    margin: 2em 0; /* Optional spacing */
+}
+
+.spotify_login {
     display: inline-block;
     padding: 10px 20px;
     background-color: rgba(30, 215, 96, 1);
-    color: black;
+    font-family: 'Oswald', sans-serif;
+    border-radius: 3em;
+    color: rgb(0, 0, 0);
     text-decoration: none;
-    transition: background-color 0.3s ease;
-    font-family: 'Oswald';
-    border-radius: 1em;
 }
 
-.spotify-login:hover {
+.spotify_button:hover {
     background-color: rgb(13, 126, 53);
 }
 
