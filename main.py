@@ -19,13 +19,13 @@ with open('assets/style.css') as f:
 # Page Configuration
 st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 
-# Initialize session state
+# Session state setup
 if "token_info" not in st.session_state:
     st.session_state.token_info = None
 if "auth_pending" not in st.session_state:
     st.session_state.auth_pending = False
 
-# Set up SpotifyOAuth
+# Setup Spotify OAuth
 auth_manager = SpotifyOAuth(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
@@ -35,45 +35,57 @@ auth_manager = SpotifyOAuth(
     cache_handler=None
 )
 
-# Handle Spotify OAuth code if present
+# Get query params
 query_params = st.query_params
+
+# Handle login redirect
 if not st.session_state.token_info:
     if "code" in query_params:
         st.session_state.auth_pending = True
         code = query_params["code"]
         try:
             token_info = auth_manager.get_access_token(code, as_dict=True)
+
             if token_info:
                 st.session_state.token_info = token_info
                 st.session_state.auth_pending = False
-                st.experimental_set_query_params()  # clear ?code=...
+                st.experimental_set_query_params()  # Clear ?code
                 st.rerun()
             else:
-                st.error("⚠️ Failed to get token. Please log in again.")
+                st.error("⚠️ Failed to retrieve access token. Please log in again.")
                 st.session_state.auth_pending = False
                 st.stop()
+
         except Exception as e:
             st.error(f"❌ OAuth Error: {e}")
             st.session_state.auth_pending = False
             st.stop()
+
     else:
-        # Not logged in yet
+        # Not authenticated
         st.title("🎧 Welcome to <sponty/>")
         auth_url = auth_manager.get_authorize_url()
         st.markdown(f"[**Login with Spotify**]({auth_url})")
+
+        # Optional: Reset button
+        if st.button("Reset Login"):
+            st.session_state.token_info = None
+            st.experimental_set_query_params()
+            st.rerun()
+
         st.stop()
 
-# Still processing auth
+# Still waiting for token
 if st.session_state.auth_pending:
-    st.info("Finishing authentication... please wait.")
+    st.info("⏳ Finishing authentication... Please wait.")
     st.stop()
 
-# Final safety check
+# Safety check
 if not st.session_state.token_info:
-    st.error("No valid token. Please try logging in again.")
+    st.error("⚠️ Token missing. Please log in again.")
     st.stop()
 
-# ✅ User is authenticated — main app
+# ✅ Authenticated — show main app
 token_info = st.session_state.token_info
 sp = spotipy.Spotify(auth=token_info['access_token'])
 
