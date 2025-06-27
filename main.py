@@ -40,7 +40,7 @@ auth_manager = SpotifyOAuth(
 # Query parameters
 query_params = st.query_params
 
-# --- Authentication Flow ---
+# Authentication Flow
 if not st.session_state.token_info:
     if "code" in query_params and not st.session_state.code_used:
         st.session_state.auth_pending = True
@@ -53,23 +53,24 @@ if not st.session_state.token_info:
             if token_info:
                 st.session_state.token_info = token_info
                 st.session_state.auth_pending = False
-                st.query_params.clear()  # ✅ new way to clear ?code
+                st.query_params.clear()
                 st.rerun()
             else:
-                st.error("⚠️ Failed to retrieve access token. Please log in again.")
+                st.error("Failed to retrieve access token. Please log in again.")
                 st.session_state.auth_pending = False
                 st.stop()
 
         except Exception as e:
-            st.error(f"❌ OAuth Error: {e}")
+            st.error(f"OAuth Error: {e}")
             st.session_state.auth_pending = False
             st.stop()
 
     else:
         # Not logged in
-        st.title("🎧 Welcome to <sponty/>")
+        st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
         auth_url = auth_manager.get_authorize_url()
-        st.markdown(f"[**Login with Spotify**]({auth_url})")
+        #st.markdown(f"[**Login with Spotify**]({auth_url})")
+        st.markdown(f"""<a href="{auth_url}" target="_self" class="spotify-login">Login with Spotify</a>""", unsafe_allow_html=True)
 
         if st.button("Reset Login"):
             for key in ["token_info", "auth_pending", "code_used"]:
@@ -80,14 +81,14 @@ if not st.session_state.token_info:
         st.stop()
 
 if st.session_state.auth_pending:
-    st.info("⏳ Finishing authentication...")
+    st.info("Finishing authentication...")
     st.stop()
 
 if not st.session_state.token_info:
-    st.error("⚠️ No token found. Please login again.")
+    st.error("No token found. Please login again.")
     st.stop()
 
-# --- Main App ---
+# Main App
 token_info = st.session_state.token_info
 sp = spotipy.Spotify(auth=token_info['access_token'])
 

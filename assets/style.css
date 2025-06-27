@@ -17,6 +17,25 @@ html, body, [class*="css"] {
     background-repeat: repeat;
 }
 
+/* Spotify Login */
+.spotify-login {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: rgba(30, 215, 96, 1);
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    font-family: 'Oswald';
+    border-radius: 1em;
+}
+
+.spotify-login:hover {
+    background-color: rgb(13, 126, 53);
+}
+
+
+
+/* Main Title */
 .title h1{
   color: rgba(30, 215, 96, 1);
   font-size: 5em;
