@@ -22,7 +22,6 @@ html, body, [class*="css"] {
     display: flex;
     justify-content: center;
     margin: 2em 0;
-    color: #000000;
 }
 
 .spotify_login {
@@ -31,13 +30,12 @@ html, body, [class*="css"] {
     background-color: rgba(30, 215, 96, 1);
     border-radius: 3em;
     text-decoration: none;
-}
-
-.spotify_login a{
     font-family: 'Oswald';
     color: rgb(0, 0, 0);
-    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
 }
+
 
 /* Main Title */
 .title h1{
