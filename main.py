@@ -1,4 +1,5 @@
 import spotipy
+from spotipy.cache_handler import CacheHandler
 from spotipy.oauth2 import SpotifyOAuth
 import streamlit as st
 from dotenv import load_dotenv
@@ -20,9 +21,9 @@ with open('assets/style.css') as f:
 st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 
 # -------------------------------
-# Custom CacheHandler (Session-based)
+# ✅ Custom Session-based Cache Handler
 # -------------------------------
-class StreamlitSessionCacheHandler:
+class StreamlitSessionCacheHandler(CacheHandler):
     def __init__(self, session_key="token_info"):
         self.session_key = session_key
 
@@ -42,7 +43,7 @@ def get_auth_manager():
         redirect_uri=REDIRECT_URI,
         scope=SCOPE,
         show_dialog=True,
-        cache_handler=StreamlitSessionCacheHandler()  # ✅ No file-based cache!
+        cache_handler=StreamlitSessionCacheHandler()  # ✅ Per-user session
     )
 
 # -------------------------------
@@ -56,7 +57,7 @@ if "code_used" not in st.session_state:
     st.session_state.code_used = False
 
 # -------------------------------
-# Handle Query Params (Spotify Redirect)
+# Handle Spotify OAuth Callback
 # -------------------------------
 query_params = st.query_params
 auth_manager = get_auth_manager()
@@ -81,7 +82,7 @@ if not st.session_state.token_info:
             st.error(f"OAuth Error: {e}")
             st.stop()
     else:
-        # Not logged in yet
+        # Not logged in
         st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
         auth_url = auth_manager.get_authorize_url()
         st.markdown(
