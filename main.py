@@ -8,7 +8,7 @@ load_dotenv()
 
 CLIENT_ID = os.environ.get('CLIENT_ID')
 CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-REDIRECT_URI = 'http://127.0.0.1:8000/callback'
+REDIRECT_URI = 'https://sponty.streamlit.app/callback'
 
 sp = spotipy.Spotify(
   auth_manager=SpotifyOAuth(
