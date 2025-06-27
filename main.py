@@ -27,7 +27,7 @@ if "auth_pending" not in st.session_state:
 if "code_used" not in st.session_state:
     st.session_state.code_used = False
 
-# Setup Spotify OAuth
+# Spotify OAuth setup
 auth_manager = SpotifyOAuth(
     client_id=CLIENT_ID,
     client_secret=CLIENT_SECRET,
@@ -37,13 +37,14 @@ auth_manager = SpotifyOAuth(
     cache_handler=None
 )
 
-# OAuth handling
+# Query parameters
 query_params = st.query_params
 
+# --- Authentication Flow ---
 if not st.session_state.token_info:
     if "code" in query_params and not st.session_state.code_used:
         st.session_state.auth_pending = True
-        st.session_state.code_used = True  # ✅ Prevent reuse
+        st.session_state.code_used = True
         code = query_params["code"]
 
         try:
@@ -52,10 +53,10 @@ if not st.session_state.token_info:
             if token_info:
                 st.session_state.token_info = token_info
                 st.session_state.auth_pending = False
-                st.experimental_set_query_params()  # ✅ Clear ?code=...
+                st.query_params.clear()  # ✅ new way to clear ?code
                 st.rerun()
             else:
-                st.error("⚠️ Failed to retrieve access token. Please try logging in again.")
+                st.error("⚠️ Failed to retrieve access token. Please log in again.")
                 st.session_state.auth_pending = False
                 st.stop()
 
@@ -70,26 +71,23 @@ if not st.session_state.token_info:
         auth_url = auth_manager.get_authorize_url()
         st.markdown(f"[**Login with Spotify**]({auth_url})")
 
-        # Reset login if stuck
         if st.button("Reset Login"):
             for key in ["token_info", "auth_pending", "code_used"]:
                 st.session_state.pop(key, None)
-            st.experimental_set_query_params()
+            st.query_params.clear()
             st.rerun()
 
         st.stop()
 
-# Show spinner if still authenticating
 if st.session_state.auth_pending:
     st.info("⏳ Finishing authentication...")
     st.stop()
 
-# Final safety check
 if not st.session_state.token_info:
-    st.error("⚠️ Token missing. Please try logging in again.")
+    st.error("⚠️ No token found. Please login again.")
     st.stop()
 
-# ✅ Main app
+# --- Main App ---
 token_info = st.session_state.token_info
 sp = spotipy.Spotify(auth=token_info['access_token'])
 
