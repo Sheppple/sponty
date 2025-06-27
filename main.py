@@ -22,13 +22,13 @@ REDIRECT_URI = 'https://sponty.streamlit.app'
 
 if "token_info" not in st.session_state:
     auth_manager = SpotifyOAuth(
-        client_id=CLIENT_ID,
-        client_secret=CLIENT_SECRET,
-        redirect_uri=REDIRECT_URI,
-        scope='user-top-read',
-        show_dialog=True,
-        cache_path=".cache"  # won't persist across sessions on Streamlit Cloud
-    )
+    client_id=CLIENT_ID,
+    client_secret=CLIENT_SECRET,
+    redirect_uri=REDIRECT_URI,
+    scope='user-top-read',
+    show_dialog=True,
+    cache_handler=None  # avoid using .cache on Streamlit Cloud
+)
 
     auth_url = auth_manager.get_authorize_url()
     st.markdown(f"[**Click here to log in with Spotify**]({auth_url})")
