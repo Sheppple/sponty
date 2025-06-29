@@ -5,6 +5,7 @@ html, body, [class*="css"] {
     color: #a7a7a7;
 }
 
+/* App Settings */
 .stApp {
     margin: auto;
     overflow: auto;
@@ -17,30 +18,6 @@ html, body, [class*="css"] {
     background-repeat: repeat;
 }
 
-/* Wrapper for centering */
-.spotify_button {
-    display: flex;
-    justify-content: center;
-    margin: 2em 0;
-}
-
-/* The anchor tag styled as a button */
-.spotify_button .spotify_login {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: rgba(30, 215, 96, 1);
-    border-radius: 3em;
-    text-decoration: none !important; /* <-- force-remove underline */
-    font-family: 'Oswald';
-    color: black !important;          /* <-- force text color */
-    transition: background-color 0.3s ease;
-}
-
-/* Reset Login */
-.st-key-reset_login {
-
-}
-
 /* Main Title */
 .title h1{
   color: rgba(30, 215, 96, 1);
@@ -50,6 +27,33 @@ html, body, [class*="css"] {
   font-family: 'Oswald';
 }
 
+/* Username Container */
+.st-key-username {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+/* Username Input Box*/
+div[data-testid="stTextInputRootElement"]{
+  border-radius: 5px;
+  width: 250px;
+  height: 80px;
+  align-content: center;
+}
+
+/* Username Input Field */
+.stTextInput input {
+  font-family: 'Oswald';
+  font-size: 2.5em;
+  text-align: center;
+  background-color: rgba(30, 215, 96, 1);
+  color: #000000;
+}
+
 /* Selector Container */
 .st-key-selector {
   margin: 0 auto;
@@ -57,7 +61,6 @@ html, body, [class*="css"] {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
 }
 
 /* Selector List*/
@@ -126,7 +129,6 @@ div[data-baseweb="select"] > div {
   color: #000000;
   font-size: 2em;
   line-height: 1;
-
 }
 
 /* Top Artists Subheader */
@@ -149,6 +151,27 @@ div[data-baseweb="select"] > div {
   font-size: 1em;
   flex-shrink: 0;
   margin-bottom: 0.5em;
+}
+
+/* Top Albums */
+.st-key-top_albums {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  color: #000000;
+}
+
+/* Top Albums Subheader */
+.st-key-top_albums h3{
+  color: #000000;
+  font-size: 2em;
+}
+
+/* Album Containers */
+[class^="album_"] {
+  line-height: 1;
+  height: 60px;
 }
 
 /* Github Link */
