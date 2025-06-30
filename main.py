@@ -21,7 +21,7 @@ st.set_page_config(page_title = '<sponty/>', page_icon = 'assets/sponty.svg')
 st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_html=True)
 
 # Username
-username = st.text_input(label = 'username', placeholder = 'Username', label_visibility= 'hidden', key = 'username')
+username = st.text_input(label = 'username', placeholder = 'last.fm username', label_visibility= 'hidden', key = 'username')
 
 if username:
     try:
@@ -29,17 +29,17 @@ if username:
         user = network.get_user(username)
 
         # Time Range Selector
-        period = st.selectbox('period', options = ['last 7 days', 'last month', 'last 3 months', 'last 6 months', 'last year', 'overall'], label_visibility = 'hidden', key = 'selector')
+        period = st.selectbox('period', options = ['last week', 'last month', 'last 3 months', 'last 6 months', 'last year', 'overall'], label_visibility = 'hidden', key = 'selector')
 
-        if period == 'last 7 days':
+        if period == 'last week':
             period = '7day'
-        if period == 'last month':
+        elif period == 'last month':
             period = '1month'
-        if period == 'last 3 months':
+        elif period == 'last 3 months':
             period = '3month'
-        if period == 'last 6 months':
+        elif period == 'last 6 months':
             period = '6month'
-        if period == 'last year':
+        elif period == 'last year':
             period = '12month'
 
 
@@ -55,9 +55,6 @@ if username:
         top_albums = user.get_top_albums(period = period, limit = 10)
         album_name = [album.item.title for album in top_albums]
         album_artist = [album.item.artist.name for album in top_albums]
-        #album = pl.Album(title = album_name, artist = album_artist, network = network)
-        #album_cover = album.get_cover_image(size = 0)
-
 
         # Main Container
         container = st.container(key = 'container')
@@ -96,4 +93,4 @@ if username:
         st.markdown("<div class='link'><p><a href = 'https://github.com/ivan-padilla/sponty' targe = '_blank' rel = 'noopener noreferrer't>&lt;github.com/&gt</a></p></div>", unsafe_allow_html=True)
 
     except pl.PyLastError:
-        st.error('Username invalid.')
+        st.error('Invalid username.')
