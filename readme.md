@@ -1,12 +1,12 @@
 # Sponty: Visualize your listening history
 
-![Alt text](assets/screenshots/1.png) ![Alt text](assets/screenshots/2.png) ![Alt text](assets/screenshots/3.png)
+![Screenshot of the app](assets/screenshots/1.png)
 
 ## Overview
 
 ### Sponty is a web application that lets users explore and visualize their music listening habits. It connects to the Last.fm API to retrieve your top artists, songs, and tags, and presents them in a clean, interactive interface powered by Streamlit. The app is styled with custom CSS for a personalized and modern visual experience.
 
-### 🌐 Try it live → [Sponty](sponty.streamlit.app)
+### 🌐 Try it live → [Sponty](https://sponty.streamlit.app/)
 
 ## Contents
 - `main.py` – Main application logic for the Streamlit web app.
