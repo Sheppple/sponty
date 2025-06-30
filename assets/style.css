@@ -170,8 +170,15 @@ div[data-baseweb="select"] > div {
 
 /* Album Containers */
 [class^="album_"] {
-  line-height: 1;
   height: 60px;
+}
+
+/* Album Rank and Name */
+[class^="album_rank"] {
+  padding-top: 0.5em;
+  padding-left: 0.5em;
+  line-height: 1;
+  font-size: 0.75em;
 }
 
 /* Github Link */
