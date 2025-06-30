@@ -1,6 +1,9 @@
 import pylast as pl
 import streamlit as st
+import pandas as pd
+import plotly.express as px
 from dotenv import load_dotenv
+from collections import Counter
 import os
 
 load_dotenv()
@@ -56,6 +59,57 @@ if username:
         album_name = [album.item.title for album in top_albums]
         album_artist = [album.item.artist.name for album in top_albums]
 
+        # Top Tags
+        all_tags = []
+        for item in top_tracks:
+            track = item.item
+            artist = track.artist.name
+            title = track.title
+
+            tags = pl.Track(artist = artist, title = title, network = network).get_top_tags(limit = 5)
+
+            tag_names = [tag.item.name for tag in tags]
+
+            all_tags.extend(tag_names)
+
+        # Dataframe for tags and their corresponding counts
+        tag_counts = Counter(all_tags)
+        df = pd.DataFrame(tag_counts.items(), columns = ['tag', 'count']).head(10)
+
+        # Top Tags Chart
+        colors = [
+            'rgba(255, 60, 155, 1)',
+            'rgba(214, 243, 31, 1)',
+            'rgba(60, 255, 208, 1)',
+            'rgba(76, 2, 232, 1)',
+            ]
+
+        fig = px.pie(
+            df,
+            names = 'tag',
+            values = 'count',
+            hole = 0.5,
+            color_discrete_sequence = colors
+            )
+
+        fig.update_layout(
+            plot_bgcolor = 'rgba(26, 27, 30, 1)',
+            paper_bgcolor = 'rgba(26, 27, 30, 1)',
+            font_color = 'white',
+            margin = dict(
+                t= 50,
+                b = 120
+            ),
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=-0.5,
+                xanchor="center",
+                x=0.5,
+                font_color = 'white'
+                )
+            )
+
         # Main Container
         container = st.container(key = 'container')
 
@@ -89,8 +143,18 @@ if username:
                             cover = pl.Album(title = album, artist = artist, network = network).get_cover_image(size=2)
                             st.markdown(f"""<div style="text-align: center;"><img src="{cover}" width="125" style="border-radius: 8px;" /><div class="album_rank">{i+1}. {album}</div></div>""",unsafe_allow_html=True)
 
+
+            top_tags_con = st.container(key = 'top_tags')
+
+            with top_tags_con:
+                st.subheader('top tags')
+                st.plotly_chart(fig)
+
         # Github Link
-        st.markdown("<div class='link'><p><a href = 'https://github.com/ivan-padilla/sponty' targe = '_blank' rel = 'noopener noreferrer't>&lt;github.com/&gt</a></p></div>", unsafe_allow_html=True)
+        st.markdown("<div class='link'><p><a href = 'https://github.com/ivan-padilla/sponty' target = '_blank' rel = 'noopener noreferrer't>&lt;github.com/&gt</a></p></div>", unsafe_allow_html=True)
 
     except pl.PyLastError:
         st.error('Invalid username.')
+
+# Note
+st.markdown("<div class='note'><h3>Note: If you are a Spotify user, sign up first to <a href = 'https://www.last.fm' target = '_blank' rel = 'noopener noreferrer't>last.fm</a> and connect your Spotify account.</h3></div>", unsafe_allow_html=True)

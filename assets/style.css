@@ -166,6 +166,7 @@ div[data-baseweb="select"] > div {
 .st-key-top_albums h3{
   color: #000000;
   font-size: 2em;
+  padding-left: 0.3em;
 }
 
 /* Album Containers */
@@ -179,6 +180,24 @@ div[data-baseweb="select"] > div {
   padding-left: 0.5em;
   line-height: 1;
   font-size: 0.75em;
+}
+
+/* Top Tags */
+.st-key-top_tags {
+  padding-top: 0.5em;
+  padding-bottom: 1em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  background-color: rgba(26, 27, 30, 1);
+  border-radius: 2em;
+  color: #ffffff;
+}
+
+/* Top Tags Subheader */
+.st-key-top_tags h3{
+  color: #ffffff;
+  font-size: 2em;
+  padding-left: 0.3em;
 }
 
 /* Github Link */
@@ -196,4 +215,23 @@ div[data-baseweb="select"] > div {
 .link a:hover {
   text-decoration: underline;
   opacity: 0.8;
+}
+
+/* Note */
+.note h3{
+  color: rgba(30, 215, 96, 1);
+  font-size: 1.5em;
+  font-weight: lighter;
+  text-align: center;
+  font-family: 'Oswald';
+}
+
+.note a{
+  color: rgba(30, 215, 96, 1);
+  text-decoration: underline;
+}
+
+.note a:hover {
+  opacity: 0.8;
+  font-weight: bold;
 }

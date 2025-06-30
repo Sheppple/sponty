@@ -1,3 +1,5 @@
 streamlit
 pylast
 python-dotenv
+plotly
+pandas
