@@ -74,7 +74,7 @@ if username:
 
         # Dataframe for tags and their corresponding counts
         tag_counts = Counter(all_tags)
-        df = pd.DataFrame(tag_counts.items(), columns = ['tag', 'count']).head(10)
+        df = pd.DataFrame(tag_counts.items(), columns=['tag', 'count']).sort_values(by='count', ascending=False).head(10)
 
         # Top Tags Chart
         colors = [
@@ -134,15 +134,32 @@ if username:
 
             with top_albums_con:
                 st.subheader('top albums')
-                cols = st.columns(5, gap = 'small')
-                for i, (album, artist) in enumerate(zip(album_name, album_artist)):
-                    col = cols[i % 5]
-                    with col:
-                        album_con = st.container(key = f"album_{i+1}")
-                        with album_con:
-                            cover = pl.Album(title = album, artist = artist, network = network).get_cover_image(size=2)
-                            st.markdown(f"""<div style="text-align: center;"><img src="{cover}" width="125" style="border-radius: 8px;" /><div class="album_rank">{i+1}. {album}</div></div>""",unsafe_allow_html=True)
 
+                row1 = st.container(key = 'row1')
+
+                with row1:
+                    cols = st.columns(5, gap = 'small')
+
+                    for i, (album, artist) in enumerate(zip(album_name[:5], album_artist[:5])):
+                        col = cols[i % 5]
+                        with col:
+                            album_con = st.container(key = f"album_{i+1}")
+                            with album_con:
+                                cover = pl.Album(title = album, artist = artist, network = network).get_cover_image(size=2)
+                                st.markdown(f"""<div style="text-align: center;"><img src="{cover}" width="125" style="border-radius: 8px;" /><div class="album_rank">{i+1}. {album}</div></div>""",unsafe_allow_html=True)
+
+                row2 = st.container(key = 'row2')
+
+                with row2:
+                    cols = st.columns(5, gap = 'small')
+
+                    for i, (album, artist) in enumerate(zip(album_name[5:], album_artist[5:])):
+                        col = cols[i % 5]
+                        with col:
+                            album_con = st.container(key = f"album_{i+6}")
+                            with album_con:
+                                cover = pl.Album(title = album, artist = artist, network = network).get_cover_image(size=2)
+                                st.markdown(f"""<div style="text-align: center;"><img src="{cover}" width="125" style="border-radius: 8px;" /><div class="album_rank">{i+6}. {album}</div></div>""",unsafe_allow_html=True)
 
             top_tags_con = st.container(key = 'top_tags')
 
