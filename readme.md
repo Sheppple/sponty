@@ -1,6 +1,6 @@
 # Sponty: Visualize your listening history
 
-![Demo of the App](assets/screenshots/sponty_demo.mp4)
+![Demo of the App](assets/sponty_demo.gif)
 
 ## Overview
 
