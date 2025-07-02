@@ -54,6 +54,18 @@ div[data-testid="stTextInputRootElement"]{
   color: #000000;
 }
 
+/* Demo Video */
+.st-key-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stVideo {
+  height: 300px;
+  width: 530px;
+}
+
 /* Selector Container */
 .st-key-selector {
   margin: 0 auto;

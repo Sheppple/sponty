@@ -26,6 +26,11 @@ st.markdown("<div class='title'><h1>&lt;sponty/&gt</h1></div>", unsafe_allow_htm
 # Username
 username = st.text_input(label = 'username', placeholder = 'last.fm username', label_visibility= 'hidden', key = 'username')
 
+if not username:
+    demo = st.container(key = 'demo')
+    with demo:
+        st.video('assets/demo.mp4')
+
 if username:
     try:
 
