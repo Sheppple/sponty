@@ -29,7 +29,7 @@ username = st.text_input(label = 'username', placeholder = 'last.fm username', l
 if not username:
     demo = st.container(key = 'demo')
     with demo:
-        st.video('assets/demo.mp4')
+        st.video('assets/sponty_demo.mp4')
 
 if username:
     try:

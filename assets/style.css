@@ -62,8 +62,7 @@ div[data-testid="stTextInputRootElement"]{
 }
 
 .stVideo {
-  height: 300px;
-  width: 530px;
+  border-radius: 1em;
 }
 
 /* Selector Container */
